@@ -1,4 +1,4 @@
-package com.guptas.android.Activity;
+package com.guptas.android.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -74,7 +74,6 @@ public class SelectTeamActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                SharedPreferenceHandler.getInstance().clearUserName(SelectTeamActivity.this);
                 AppUtils.getInstance().pageTransition(SelectTeamActivity.this, LoginActivity.class);
                 return true;
             default:

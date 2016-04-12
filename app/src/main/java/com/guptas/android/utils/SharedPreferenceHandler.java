@@ -19,24 +19,33 @@ public class SharedPreferenceHandler {
     public void saveUserName(Activity activity, String userName) {
         SharedPreferences pref = activity.getSharedPreferences(ApplicationConstants.SHARED_PREF, ApplicationConstants.PRIVATE_MODE_PREFERENCE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("username", userName);
+        editor.putString(ApplicationConstants.FACEBOOK_USER_NAME, userName);
         editor.apply();
     }
 
     public String getUserName(Activity activity){
         SharedPreferences pref = activity.getSharedPreferences(ApplicationConstants.SHARED_PREF, ApplicationConstants.PRIVATE_MODE_PREFERENCE);
-        if (pref.contains("username")) {
-            return pref.getString("username", null);
+        if (pref.contains(ApplicationConstants.FACEBOOK_USER_NAME)) {
+            return pref.getString(ApplicationConstants.FACEBOOK_USER_NAME, null);
         } else {
             return null;
         }
     }
 
-    public void clearUserName(Activity activity) {
+    public void saveUserId(Activity activity, String userId) {
         SharedPreferences pref = activity.getSharedPreferences(ApplicationConstants.SHARED_PREF, ApplicationConstants.PRIVATE_MODE_PREFERENCE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.clear();
+        editor.putString(ApplicationConstants.FACEBOOK_USER_ID, userId);
         editor.apply();
+    }
+
+    public String getUserId(Activity activity){
+        SharedPreferences pref = activity.getSharedPreferences(ApplicationConstants.SHARED_PREF, ApplicationConstants.PRIVATE_MODE_PREFERENCE);
+        if (pref.contains(ApplicationConstants.FACEBOOK_USER_ID)) {
+            return pref.getString(ApplicationConstants.FACEBOOK_USER_ID, null);
+        } else {
+            return null;
+        }
     }
 
 }

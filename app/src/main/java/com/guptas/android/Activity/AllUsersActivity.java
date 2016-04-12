@@ -1,4 +1,4 @@
-package com.guptas.android.Activity;
+package com.guptas.android.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
