@@ -12,13 +12,12 @@ public class MatchInfo {
     public MatchInfo() {
     }
 
-    public MatchInfo(String matchname, String team1, String team2, Long timestamp, String result)
+    public MatchInfo(String team1, String team2, Long timestamp, String result)
     {
         this.result = result;
         this.team1 = team1;
         this.team2 = team2;
         this.timestamp = timestamp;
-        this.matchname = matchname;
     }
 
     public String getTeam1() {
@@ -35,10 +34,6 @@ public class MatchInfo {
 
     public String getResult() {
         return result;
-    }
-
-    public String getMatchname() {
-        return matchname;
     }
 
 }

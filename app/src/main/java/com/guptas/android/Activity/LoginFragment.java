@@ -20,8 +20,10 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.client.Firebase;
 import com.guptas.android.R;
 import com.guptas.android.utils.AppUtils;
+import com.guptas.android.utils.ApplicationConstants;
 import com.guptas.android.utils.SharedPreferenceHandler;
 
 /**
@@ -30,7 +32,6 @@ import com.guptas.android.utils.SharedPreferenceHandler;
 public class LoginFragment extends Fragment {
 
     private CallbackManager callbackManager;
-
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
 
@@ -38,7 +39,7 @@ public class LoginFragment extends Fragment {
         @Override
         public void onSuccess(LoginResult loginResult) {
             AccessToken accessToken = loginResult.getAccessToken();
-            Log.e("Facebook aT.. :" , " "+accessToken);
+            Log.e("Facebook aT.. :", " " + accessToken);
             Profile profile = Profile.getCurrentProfile();
             successProcessing(profile);
         }
@@ -60,11 +61,11 @@ public class LoginFragment extends Fragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        accessTokenTracker= new AccessTokenTracker() {
+        accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
 
@@ -105,11 +106,13 @@ public class LoginFragment extends Fragment {
 
     }
 
-    private void successProcessing(Profile profile){
-        if(profile != null){
+    private void successProcessing(Profile profile) {
+        if (profile != null) {
+            Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("Users");
+            firebase.child(profile.getId()).setValue(profile.getName());
             SharedPreferenceHandler.getInstance().saveUserId(getActivity(), profile.getId());
             SharedPreferenceHandler.getInstance().saveUserName(getActivity(), profile.getName());
-            AppUtils.getInstance().pageTransition(getActivity() , SelectTeamActivity.class);
+            AppUtils.getInstance().pageTransition(getActivity(), SelectTeamActivity.class);
         }
     }
 
