@@ -34,13 +34,18 @@ import com.guptas.android.utils.SharedPreferenceHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SelectTeamActivity extends AppCompatActivity {
     private ListView match_recycler_view;
     private SelectTeamAdapter adapter;
     private Firebase firebaseRef;
     private LinearLayout parentLayout;
+    private Map<String, String> user_match_prediction_pair;
+    private Integer userPoints = 0;
+    private Map<String, String> match_winner_pair;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,12 +149,18 @@ public class SelectTeamActivity extends AppCompatActivity {
     }
 
     public void getPoints() {
+        user_match_prediction_pair = new HashMap<>();
+        match_winner_pair = new HashMap<>();
+        userPoints = 0;
+
         firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(SelectTeamActivity.this)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Log.e("UserInput", ".................." + postSnapshot.getKey());
                     Log.e("UserInput", ".................." + postSnapshot.getValue());
+
+                    user_match_prediction_pair.put(postSnapshot.getKey(), postSnapshot.getValue().toString());
                 }
             }
 
@@ -164,19 +175,29 @@ public class SelectTeamActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                MatchInfo matchInfo = postSnapshot.getValue(MatchInfo.class);
+                    MatchInfo matchInfo = postSnapshot.getValue(MatchInfo.class);
+                    match_winner_pair.put(postSnapshot.getKey(),matchInfo.getResult());
+
                     Log.e("MatchInfo", ".................." + postSnapshot.getKey());
                     Log.e("MatchInfo", ".................." + matchInfo.getTeam1());
                     Log.e("MatchInfo", ".................." + matchInfo.getTeam2());
                     Log.e("MatchInfo", ".................." + matchInfo.getResult());
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
+
+        for (String match: user_match_prediction_pair.keySet()) {
+            if (user_match_prediction_pair.get(match).equals(match_winner_pair.get(match))) {
+                userPoints++;
+            }
+
+        }
+
+        Log.e("UserPoints ", userPoints.toString());
     }
 
 }
