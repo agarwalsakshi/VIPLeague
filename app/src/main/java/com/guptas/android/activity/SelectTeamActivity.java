@@ -153,12 +153,13 @@ public class SelectTeamActivity extends AppCompatActivity {
         match_winner_pair = new HashMap<>();
         userPoints = 0;
 
-        firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(SelectTeamActivity.this)).addValueEventListener(new ValueEventListener() {
+//        firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(SelectTeamActivity.this)).addValueEventListener(new ValueEventListener() {
+        firebaseRef.child("UserInput").child("908521382590752").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Log.e("UserInput", ".................." + postSnapshot.getKey());
-                    Log.e("UserInput", ".................." + postSnapshot.getValue());
+//                    Log.e("UserInput", ".................." + postSnapshot.getKey());
+//                    Log.e("UserInput", ".................." + postSnapshot.getValue());
 
                     user_match_prediction_pair.put(postSnapshot.getKey(), postSnapshot.getValue().toString());
                 }
@@ -174,30 +175,31 @@ public class SelectTeamActivity extends AppCompatActivity {
         firebaseRef.child("Matches").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                userPoints = 0;
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     MatchInfo matchInfo = postSnapshot.getValue(MatchInfo.class);
-                    match_winner_pair.put(postSnapshot.getKey(),matchInfo.getResult());
+                    match_winner_pair.put(postSnapshot.getKey().substring(2),matchInfo.getResult());
 
-                    Log.e("MatchInfo", ".................." + postSnapshot.getKey());
-                    Log.e("MatchInfo", ".................." + matchInfo.getTeam1());
-                    Log.e("MatchInfo", ".................." + matchInfo.getTeam2());
-                    Log.e("MatchInfo", ".................." + matchInfo.getResult());
+//                    Log.e("MatchInfo", ".................." + postSnapshot.getKey().substring(2));
+//                    Log.e("MatchInfo", ".................." + matchInfo.getTeam1());
+//                    Log.e("MatchInfo", ".................." + matchInfo.getTeam2());
+//                    Log.e("MatchInfo", ".................." + matchInfo.getResult());
                 }
+
+                for (String match: user_match_prediction_pair.keySet()) {
+                    if (user_match_prediction_pair.get(match).equals(match_winner_pair.get(match))) {
+                        userPoints = userPoints + 5;
+                    }
+
+                }
+
+                Log.e("UserPoints ", userPoints.toString());
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-
-        for (String match: user_match_prediction_pair.keySet()) {
-            if (user_match_prediction_pair.get(match).equals(match_winner_pair.get(match))) {
-                userPoints++;
-            }
-
-        }
-
-        Log.e("UserPoints ", userPoints.toString());
     }
 
 }
