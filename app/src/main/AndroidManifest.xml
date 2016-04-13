@@ -20,14 +20,20 @@
             android:label="@string/app_name" />
 
         <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".activity.AllUsersActivity"/>
-        <activity android:name=".activity.SelectTeamActivity"/>
+        <activity android:name=".activity.AllUsersActivity">
+
+        </activity>
+
+        <activity android:name=".activity.SelectTeamActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
