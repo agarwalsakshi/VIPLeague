@@ -12,13 +12,14 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(SharedPreferenceHandler.getInstance().getUserId(this) != null)
+        if(SharedPreferenceHandler.getInstance().getUserId(this) == null)
         {
-            AppUtils.getInstance().pageTransition(this, SelectTeamActivity.class);
+            setContentView(R.layout.activity_login);
         }
         else
         {
-            setContentView(R.layout.activity_login);
+            AppUtils.getInstance().pageTransition(this, SelectTeamActivity.class);
+            finish();
         }
 
     }
