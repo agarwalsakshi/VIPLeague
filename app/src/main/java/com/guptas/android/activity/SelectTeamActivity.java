@@ -192,8 +192,8 @@ public class SelectTeamActivity extends AppCompatActivity {
                     }
 
                 }
-
                 Log.e("UserPoints ", userPoints.toString());
+                firebaseRef.child("Users").child("908521382590752").child("points").setValue(userPoints);
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -201,5 +201,4 @@ public class SelectTeamActivity extends AppCompatActivity {
             }
         });
     }
-
 }
