@@ -33,7 +33,6 @@ public class AppUtils {
     public void pageTransition(Activity activity, Class<?> transitionclass){
         Intent transitionintent = new Intent(activity, transitionclass);
         activity.startActivity(transitionintent);
-        activity.finish();
     }
 
     public void showProgressDialog(Activity activity, String message){

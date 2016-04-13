@@ -48,4 +48,10 @@ public class SharedPreferenceHandler {
         }
     }
 
+    public void deleteAllData(Activity activity){
+        SharedPreferences pref = activity.getSharedPreferences(ApplicationConstants.SHARED_PREF, ApplicationConstants.PRIVATE_MODE_PREFERENCE);
+        pref.edit().clear().commit();
+    }
+
+
 }

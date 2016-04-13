@@ -4,24 +4,25 @@ package com.guptas.android.model;
  * Created by sakshiagarwal on 09/04/16.
  */
 public class Users {
-    private String username, password;
+    private String name;
+    private Integer points;
 
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
     public Users() {
     }
 
-    public Users(String username, String password)
+    public Users(String name, Integer points)
     {
-        this.username = username;
-        this.password = password;
+        this.name = name;
+        this.points = points;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public String getPassword() {
-        return password;
+    public Integer getPoints() {
+        return points;
     }
 }

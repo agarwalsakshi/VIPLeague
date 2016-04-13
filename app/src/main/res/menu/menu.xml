@@ -3,4 +3,8 @@
     <item android:id="@+id/logout"
         android:icon="@mipmap/ic_launcher"
         android:title="Log Out" />
+
+    <item android:id="@+id/score"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Score Board" />
 </menu>

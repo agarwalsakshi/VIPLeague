@@ -109,7 +109,7 @@ public class LoginFragment extends Fragment {
     private void successProcessing(Profile profile) {
         if (profile != null) {
             Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("Users");
-            firebase.child(profile.getId()).setValue(profile.getName());
+            firebase.child(profile.getId()).child("name").setValue(profile.getName());
             SharedPreferenceHandler.getInstance().saveUserId(getActivity(), profile.getId());
             SharedPreferenceHandler.getInstance().saveUserName(getActivity(), profile.getName());
             AppUtils.getInstance().pageTransition(getActivity(), SelectTeamActivity.class);

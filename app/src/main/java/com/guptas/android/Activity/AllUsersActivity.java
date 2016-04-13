@@ -19,51 +19,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AllUsersActivity extends AppCompatActivity {
-    private RecyclerView allUsersList;
-    private ArrayList<MatchInfo> matchInfos = new ArrayList<>();
+    Firebase firebaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
-        allUsersList = (RecyclerView) findViewById(R.id.all_users_list);
+        firebaseRef = new Firebase(ApplicationConstants.FIREBASSE_URL);
+    }
 
-        Firebase firebaseRef = new Firebase(ApplicationConstants.FIREBASSE_URL);
-
-        firebaseRef.child("Matches").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (AppUtils.getInstance().isNetworkAvailable(AllUsersActivity.this)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        MatchInfo matchInfo = postSnapshot.getValue(MatchInfo.class);
-                        matchInfos.add(matchInfo);
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        firebaseRef.child("UserInput").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (AppUtils.getInstance().isNetworkAvailable(AllUsersActivity.this)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        Log.e("PostSnapshot", postSnapshot.toString());
-
-
-                        HashMap<String, ArrayList<HashMap<String, String>>> userMap = new HashMap<>();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
