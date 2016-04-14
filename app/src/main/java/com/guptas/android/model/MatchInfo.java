@@ -4,7 +4,7 @@ package com.guptas.android.model;
  * Created by sakshiagarwal on 08/04/16.
  */
 public class MatchInfo {
-    private String team1, team2, result, matchname;
+    private String team1, team2, result;
     private Long timestamp;
 
     // Required default constructor for Firebase object mapping

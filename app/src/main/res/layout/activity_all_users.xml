@@ -5,10 +5,30 @@
     android:layout_height="match_parent"
     tools:context="com.guptas.android.activity.AllUsersActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_score"
+        android:textSize="40dp"
+        android:text="N/A"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="Your Score"
+        android:id="@+id/scoreText"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/user_score"
+        android:layout_marginBottom="20dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:layout_below="@id/scoreText"
         android:id="@+id/allUsersRecyclerView">
 
     </android.support.v7.widget.RecyclerView>
