@@ -5,14 +5,12 @@
     android:layout_height="match_parent"
     tools:context="com.guptas.android.activity.AllUsersActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_score"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="40"
-        android:textSize="50sp"
-        android:textColor="@color/colorPrimaryDark"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:id="@+id/allUsersRecyclerView">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

@@ -110,6 +110,11 @@ public class LoginFragment extends Fragment {
         if (profile != null) {
             Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("Users");
             firebase.child(profile.getId()).child("name").setValue(profile.getName());
+
+            //added so that while retrieving there is always a value for the points key
+            if (firebase.child(profile.getId()).child("points") == null) {
+                firebase.child(profile.getId()).child("points").setValue(0);
+            }
             SharedPreferenceHandler.getInstance().saveUserId(getActivity(), profile.getId());
             SharedPreferenceHandler.getInstance().saveUserName(getActivity(), profile.getName());
             AppUtils.getInstance().pageTransition(getActivity(), SelectTeamActivity.class);
