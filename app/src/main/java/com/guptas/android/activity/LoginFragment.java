@@ -117,6 +117,7 @@ public class LoginFragment extends Fragment {
             SharedPreferenceHandler.getInstance().saveUserId(getActivity(), profile.getId());
             SharedPreferenceHandler.getInstance().saveUserName(getActivity(), profile.getName());
             AppUtils.getInstance().pageTransition(getActivity(), SelectTeamActivity.class);
+            getActivity().finish();
         }
     }
 
