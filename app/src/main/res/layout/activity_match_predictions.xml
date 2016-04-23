@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +8,19 @@
     android:orientation="vertical"
     tools:context="com.guptas.android.activity.SelectTeamActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Matchname_textview"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/match_list"
+        android:id="@+id/match_users_predictions_recycler_view"
         android:background="#ffffff"
         android:scrollbars="vertical">
 

@@ -1,6 +1,8 @@
 package com.guptas.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,14 +23,19 @@ import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.guptas.android.R;
 import com.guptas.android.datahelper.MatchDataHelper;
 import com.guptas.android.datahelper.MatchInfoViewHolder;
+import com.guptas.android.datahelper.MatchPredictionsAdapter;
 import com.guptas.android.model.MatchInfo;
+import com.guptas.android.model.UserTeamPair;
 import com.guptas.android.utils.AppUtils;
 import com.guptas.android.utils.ApplicationConstants;
 import com.guptas.android.utils.SharedPreferenceHandler;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.guptas.android.R.layout.*;
@@ -41,6 +48,9 @@ public class SelectTeamActivity extends AppCompatActivity {
     private Integer userPoints = 0;
     private Map<String, String> match_winner_pair;
     FirebaseRecyclerAdapter mAdapter;
+    private Map<String, Map<String, String>> user_team_pairs;
+    private List<UserTeamPair> userTeamPairList;
+    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +59,8 @@ public class SelectTeamActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         AppUtils.getInstance().showProgressDialog(this, "Loading..");
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
+
+        Firebase.setAndroidContext(this);
         firebaseRef = new Firebase(ApplicationConstants.FIREBASSE_URL);
         match_recycler_view = (RecyclerView) findViewById(R.id.match_list);
         match_recycler_view.setLayoutManager(new LinearLayoutManager(this));
@@ -71,13 +83,39 @@ public class SelectTeamActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onClick(View v) {
-                        if ((Timestamp - 43200) < (System.currentTimeMillis() / 1000L) && (System.currentTimeMillis() / 1000L) < Timestamp) {
+                        if ((Timestamp - 43200 * 2) < (System.currentTimeMillis() / 1000L) && (System.currentTimeMillis() / 1000L) < Timestamp) {
                             firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(SelectTeamActivity.this)).child(matchInfo.getTeam1() + "vs" + matchInfo.getTeam2()).setValue(matchInfo.getTeam1());
                             Snackbar.make(parentLayout, "Your selection has been updated. You can change it anytime before the match starts.", Snackbar.LENGTH_LONG).show();
                         } else if ((System.currentTimeMillis() / 1000L) > Timestamp) {
-                            Snackbar.make(parentLayout, "Oops! Selection for the team has been closed.", Snackbar.LENGTH_LONG).show();
+                            extras = new Bundle();
+                            extras.putString("Matchname", getMatchName(matchInfo));
+
+                            Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("UserInput");
+                            firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    user_team_pairs = (Map<String, Map<String, String>>) dataSnapshot.getValue();
+
+                                    userTeamPairList = new ArrayList<>();
+
+                                    if (user_team_pairs!=null) {
+                                        for (String user: user_team_pairs.keySet()) {
+                                            userTeamPairList.add(new UserTeamPair(user, user_team_pairs.get(user).get(matchInfo.getTeam1() + "vs" + matchInfo.getTeam2())));
+                                        }
+                                    }
+
+                                    extras.putSerializable("UserTeamPair", (Serializable) userTeamPairList);
+                                    Intent intent = new Intent(SelectTeamActivity.this, MatchPredictionsActivity.class);
+                                    intent.putExtras(extras);
+                                    startActivity(intent);
+                                }
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
                         } else {
-                            Snackbar.make(parentLayout, "You can select your team 12 hours before the match starts.", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(parentLayout, "Team selection 12 hours before the match starts.", Snackbar.LENGTH_LONG).show();
                         }
 
                     }
@@ -85,18 +123,76 @@ public class SelectTeamActivity extends AppCompatActivity {
                 matchInfoViewHolder.secondTeamFlag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ((Timestamp - 43200) < (System.currentTimeMillis() / 1000L) && (System.currentTimeMillis() / 1000L) < Timestamp) {
+                        if ((Timestamp - 43200 * 2) < (System.currentTimeMillis() / 1000L) && (System.currentTimeMillis() / 1000L) < Timestamp) {
                             firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(SelectTeamActivity.this)).child(matchInfo.getTeam1() + "vs" + matchInfo.getTeam2()).setValue(matchInfo.getTeam2());
                             Snackbar.make(parentLayout, "Your selection has been updated. You can change it anytime before the match starts.", Snackbar.LENGTH_LONG).show();
                         } else if ((System.currentTimeMillis() / 1000L) > Timestamp) {
-                            Snackbar.make(parentLayout, "Oops! Selection for the team has been closed.", Snackbar.LENGTH_LONG).show();
+                            extras = new Bundle();
+                            extras.putString("Matchname", getMatchName(matchInfo));
+
+                            Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("UserInput");
+                            firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    user_team_pairs = (Map<String, Map<String, String>>) dataSnapshot.getValue();
+
+                                    userTeamPairList = new ArrayList<>();
+
+                                    if (user_team_pairs!=null) {
+                                        for (String user: user_team_pairs.keySet()) {
+                                            userTeamPairList.add(new UserTeamPair(user, user_team_pairs.get(user).get(matchInfo.getTeam1() + "vs" + matchInfo.getTeam2())));
+                                        }
+                                    }
+
+                                    extras.putSerializable("UserTeamPair", (Serializable) userTeamPairList);
+                                    Intent intent = new Intent(SelectTeamActivity.this, MatchPredictionsActivity.class);
+                                    intent.putExtras(extras);
+                                    startActivity(intent);
+                                }
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
                         } else {
                             Snackbar.make(parentLayout, "You can select your team 12 hours before the match starts.", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
             }
+
+            public void getUserTeamPairs(final MatchInfo matchInfo) {
+                Firebase firebase = new Firebase(ApplicationConstants.FIREBASSE_URL).child("UserInput");
+                firebase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user_team_pairs = (Map<String, Map<String, String>>) dataSnapshot.getValue();
+
+                        userTeamPairList = new ArrayList<>();
+
+                        if (user_team_pairs!=null) {
+                            for (String user: user_team_pairs.keySet()) {
+                                userTeamPairList.add(new UserTeamPair(user, user_team_pairs.get(user).get(matchInfo.getTeam1() + "vs" + matchInfo.getTeam2())));
+                            }
+                        }
+
+                        Log.e("USERTEAMPAIRLIST onDC", userTeamPairList.toString());
+                    }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }
+
+            public String getMatchName(MatchInfo matchInfo) {
+                return matchInfo.getTeam1() + "vs" + matchInfo.getTeam2();
+            }
+
         };
+
+
+
         match_recycler_view.setAdapter(mAdapter);
         getPoints();
         Log.e("testing.." , "id..:" +SharedPreferenceHandler.getInstance().getUserId(this));
@@ -130,7 +226,7 @@ public class SelectTeamActivity extends AppCompatActivity {
         user_match_prediction_pair = new HashMap<>();
         match_winner_pair = new HashMap<>();
         userPoints = 0;
-        firebaseRef.child("UserInput").child("908521382590752").addValueEventListener(new ValueEventListener() {
+        firebaseRef.child("UserInput").child(SharedPreferenceHandler.getInstance().getUserId(this)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
